@@ -1,4 +1,4 @@
-package com.github.ayush30197.spring_security_demo;
+package com.github.ayush30197.spring_security_demo.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
