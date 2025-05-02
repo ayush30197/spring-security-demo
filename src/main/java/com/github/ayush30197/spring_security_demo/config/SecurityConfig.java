@@ -6,6 +6,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -38,9 +42,29 @@ public class SecurityConfig {
        return http
                 .csrf(csrf -> csrf.disable())  //Disables the csrf
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated()) //Authorize any http request
-                .formLogin(Customizer.withDefaults()) //Provides form login feature
+                //.formLogin(Customizer.withDefaults()) //Provides form login feature
                 .httpBasic(Customizer.withDefaults()) //Uses basic auth
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Making application stateless
-               .build();
+                .build();
+    }
+
+    //Setting up users via InMemoryUserManager
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User
+                            .withDefaultPasswordEncoder()
+                            .username("bansal")
+                            .password("1234")
+                            .roles("USER")
+                            .build();
+
+        UserDetails admin = User
+                .withDefaultPasswordEncoder()
+                .username("admin")
+                .password("admin@123")
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
     }
 }
